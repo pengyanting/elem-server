@@ -55,7 +55,9 @@ router.post('/login', function (req, res, next) {
     }
   })
 })
+//获取用户全部信息
 router.post('/getUser', function (req, res, next) {
+  res.setHeader("Access-Control-Allow-Origin", "*");
   var newUser = new User({   //生成一个User的实例，并赋给他name和passowrd属性  
     phone: req.body.phone  //这里的password是加密过的（存储在数据库里也是加密过后的形式）  
   })
@@ -64,7 +66,31 @@ router.post('/getUser', function (req, res, next) {
        console.log(err);
        return;
      }
-      console.log(result)
+     res.send({
+       message:'success',
+       code:0,
+       result:result
+     })
   })
 })
+//修改用户名
+router.post('/updateName',function(req,res,next){
+   res.setHeader("Access-Control-Allow-Origin", "*");
+   var newUser=new User({
+     id:req.body.id,
+     name:req.body.name
+   })
+    newUser.updateName(function(err,result){
+      if(err){
+        res.send({err:err});
+        return;
+      }
+      res.send({
+        message:'success',
+        code:0,
+        result:result
+      }) 
+    })
+})
+
 module.exports = router;

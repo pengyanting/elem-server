@@ -2,6 +2,7 @@ var db = require('./db')
 function User(user) {       // 这是一个User类，传递的参数是一个对象，这个对象可以具有两个属性，分别是name和password  
     this.name = user.name;  // 如果传递的user不是空，那么将其赋值给User类的实例的name属性  
     this.phone = user.phone;  // 同上，赋给password属性 
+    this.id=user.id
 }  
 
 // 这个是插入方法  
@@ -29,7 +30,7 @@ User.prototype.save = function (callback) {
 // 这个是查询方法  
 User.prototype.get = function (callback) {  
     var self = this;  
-    if (this.name.length == 0) {    //如果在没账号/密码的情况下就调用插入方法，则提示错误并返回  
+    if (this.phone.length == 0) {    //如果在没账号/密码的情况下就调用插入方法，则提示错误并返回  
         console.log("You can't select user information without NAME!");  
         return callback("You can't select user information without NAME!");  
     }  
@@ -50,5 +51,20 @@ User.prototype.get = function (callback) {
         })  
     })  
 }  
-  
+User.prototype.updateName=function(callback){
+  var self=this;
+  if(this.id.length==0){
+      console.log('id不能为空');
+      return callback('id不能为空')
+  }
+    db.con(function(connect){
+        connect.query('UPDATE `user` SET `name`=? , `isUpdateName`="1" WHERE `id`=? ',[self.name,self.id],function(err,result){
+            if(err){
+                console.log(err)
+                return callback(err)
+            }
+            callback(null,result);
+        })
+    })
+}
 module.exports = User; 
