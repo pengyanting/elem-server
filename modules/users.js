@@ -2,7 +2,8 @@ var db = require('./db')
 function User(user) {       // 这是一个User类，传递的参数是一个对象，这个对象可以具有两个属性，分别是name和password  
     this.name = user.name;  // 如果传递的user不是空，那么将其赋值给User类的实例的name属性  
     this.phone = user.phone;  // 同上，赋给password属性 
-    this.id=user.id
+    this.id=user.id,
+    this.password=user.password
 }  
 
 // 这个是插入方法  
@@ -42,7 +43,7 @@ User.prototype.get = function (callback) {
                 return callback(err);  
             }  
             //注意，这里返回的是带账号和密码的，另外，理论上是有可能有多个元素的，但由于在注册时，用户名限制了重复，因此只会返回一个  
-            selectResult =  result = JSON.parse(JSON.stringify(result).replace('RowDataPacket', ''));;  //这里的result是一个数组，只包含一个元素（或者是空）  
+            selectResult =  JSON.parse(JSON.stringify(result).replace('RowDataPacket', ''));  //这里的result是一个数组，只包含一个元素（或者是空）  
             if (selectResult.length) {  //查询到的话，数组是有元素的（即length > 0）  
                 return callback(null, selectResult[0]) //这里的selectResult就是user对象，包含name和password属性  
             } else {  
@@ -51,6 +52,7 @@ User.prototype.get = function (callback) {
         })  
     })  
 }  
+//修改用户名
 User.prototype.updateName=function(callback){
   var self=this;
   if(this.id.length==0){
@@ -64,6 +66,41 @@ User.prototype.updateName=function(callback){
                 return callback(err)
             }
             callback(null,result);
+        })
+    })
+}
+//通过id获取用户信息
+User.prototype.getById=function(callback){
+    var self=this;
+    if(self.id.length===0){
+        console.log('id不能为空');
+        return callback('id不能为空');
+    }
+    db.con(function(connect){
+        connect.query('select * from user where id=?',[self.id],function(err,result){
+            if(err){
+                console.log(err);
+                return callback(err);
+            }
+            callback(null,JSON.parse(JSON.stringify(result).replace('RowDataPacket',''))[0])
+        })
+    })
+}
+//修改密码
+User.prototype.updatePwd=function(callback){
+    var self=this;
+    if(self.id.length==0||self.password.length==0){
+        console.log('id或password不能为空');
+        return callback('id或password不能为空');
+    }
+    db.con(function(connect){
+        console.log(self.password)
+        connect.query('update user set password=? where id=?',[self.password,self.id],function(err,result){
+            if(err){
+                console.log(err);
+                return callback(err);
+            }
+            callback(null,JSON.parse(JSON.stringify(result).replace('RowDataPacket','')))
         })
     })
 }

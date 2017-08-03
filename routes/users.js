@@ -61,36 +61,70 @@ router.post('/getUser', function (req, res, next) {
   var newUser = new User({   //生成一个User的实例，并赋给他name和passowrd属性  
     phone: req.body.phone  //这里的password是加密过的（存储在数据库里也是加密过后的形式）  
   })
-  newUser.get(function(err,result){
-     if(err){
-       console.log(err);
-       return;
-     }
-     res.send({
-       message:'success',
-       code:0,
-       result:result
-     })
+  newUser.get(function (err, result) {
+    if (err) {
+      console.log(err);
+      return;
+    }
+    delete (result['password']);
+    res.send({
+      message: 'success',
+      code: 0,
+      result: result
+    })
   })
 })
 //修改用户名
-router.post('/updateName',function(req,res,next){
-   res.setHeader("Access-Control-Allow-Origin", "*");
-   var newUser=new User({
-     id:req.body.id,
-     name:req.body.name
-   })
-    newUser.updateName(function(err,result){
+router.post('/updateName', function (req, res, next) {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  var newUser = new User({
+    id: req.body.id,
+    name: req.body.name
+  })
+  newUser.updateName(function (err, result) {
+    if (err) {
+      res.send({ err: err });
+      return;
+    }
+    res.send({
+      message: 'success',
+      code: 0,
+      result: result
+    })
+  })
+})
+
+//修改密码
+router.post('/updatePwd', function (req, res, next) {
+  res.setHeader('Access-Control-Allow-Origin', "*");
+  var newUser = new User({
+    id: req.body.id,
+    password: req.body.newPwd
+  })
+  newUser.getById(function (err, result) {
+    if (err) {
+      res.send({ error: err,code:1 });
+      return;
+    }
+    if (result.password == '') {
+      res.send({error:'您还未设置过密码，请用手机号设置密码',code:2});
+      return;
+    }
+    if (result.password != req.body.password) {
+      res.send({ error: '原始密码错误' ,code:1});
+      return;
+    }
+    newUser.updatePwd(function(err,result){
       if(err){
-        res.send({err:err});
+        res.send({error:err,code:1});
         return;
       }
       res.send({
         message:'success',
-        code:0,
-        result:result
-      }) 
+        result:result,
+        code:0
+      })
     })
+  })
 })
-
 module.exports = router;
