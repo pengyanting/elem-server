@@ -2,9 +2,11 @@ var express = require('express');
 var router = express.Router();
 var db = require('../modules/db');
 var User = require('../modules/users');   // 调用刚才封装好的user类  
-router.get('/login', function (req, res, next) {
+router.get('/upload', function (req, res, next) {
   res.send('aa')
 })
+
+
 //登录
 router.post('/login', function (req, res, next) {
   res.setHeader("Access-Control-Allow-Origin", "*");
