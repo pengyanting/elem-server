@@ -1,8 +1,9 @@
 var express = require('express');
 var router = express.Router();
-var db = require('../modules/db');
 var admin = require('../modules/admin');
- 
+var common = require('../modules/common');
+
+
 router.post('/login', function (req, res, next) {
     res.setHeader("Access-Control-Allow-Origin", "*");
     var newAdmin = new admin({
@@ -40,10 +41,10 @@ router.post('/getUser', function (req, res, next) {
     res.setHeader("Access-Control-Allow-Origin", "*");
     var newAdmin = new admin({
         pageSize: 10,
-        pageIndex: Number(req.body.pageIndex) - 1,
-        type: 'user'
+        pageIndex: Number(req.body.pageIndex) - 1
     })
-    newAdmin.getCount(function (err, result) {
+    var _common = new common({ type: 'user' })
+    _common.getCount(function (err, result) {
         if (err) {
             res.send({ err: err, code: 1 });
             return;
@@ -81,10 +82,10 @@ router.post('/getAdmin', function (req, res, next) {
     res.setHeader("Access-Control-Allow-Origin", "*");
     var newAdmin = new admin({
         pageSize: 10,
-        pageIndex: Number(req.body.pageIndex) - 1,
-        type: 'manager'
+        pageIndex: Number(req.body.pageIndex) - 1
     })
-    newAdmin.getCount(function (err, result) {
+    var _common = new common({ type: 'manager' })
+    _common.getCount(function (err, result) {
         if (err) {
             res.send({ err: err, code: 1 });
             return;

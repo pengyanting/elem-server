@@ -18,7 +18,7 @@ router.all('/upload', function (req, res) {
             res.locals.error = err;
             return;
         }
-         //后缀名
+        //后缀名
         if (files.fulAvatar == undefined) { return }
         var result = JSON.parse(JSON.stringify(files.fulAvatar))
         switch (result.type) {
@@ -39,18 +39,19 @@ router.all('/upload', function (req, res) {
             res.locals.error = '只支持png和jpg格式图片';
             return;
         }
-        var newPath = form.uploadDir + form.avatarName+'.'+form.extName;
+        var newPath = form.uploadDir + form.avatarName + '.' + form.extName;
         fs.renameSync(result.path, newPath);  //重命名
     });
     res.send({ message: '上传成功', code: 0, result: AVATAR_UPLOAD_FOLDER + form.avatarName })
 });
 //商铺分类
-router.get('/getCategory',function(req,res,next){
-  fs.readFile('../data/category.js', function (err, data) {
-   if (err) {
-       return console.error(err);
-   }
-   console.log("异步读取: " + data.toString());
-});
+router.get('/getCategory', function (req, res, next) {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    var category = require ('../data/category')
+    res.send({
+        message:'success',
+        result:category,
+        code:0
+    })
 })
 module.exports = router;

@@ -4,10 +4,10 @@ function admin(user) {
     this.name = user.name
     this.password = user.password
     this.address = user.address
-    this.id = user.id,
-        this.pageSize = user.pageSize,
-        this.pageIndex = user.pageIndex,
-        this.type = user.type
+    this.id = user.id
+    this.pageSize = user.pageSize
+    this.pageIndex = user.pageIndex
+    this.type = user.type
 }
 
 admin.prototype.getByName = function (callback) {
@@ -51,7 +51,6 @@ admin.prototype.save = function (callback) {
 admin.prototype.getUser = function (callback) {
     var self = this;
     db.con(function (connect) {
-        console.log(self.pageIndex)
         connect.query('select id,phone,name from user limit ?,?', [self.pageIndex * self.pageSize, self.pageSize], function (err, result) {
             if (err) {
                 console.log(err);
@@ -61,18 +60,7 @@ admin.prototype.getUser = function (callback) {
         })
     })
 }
-admin.prototype.getCount = function (callback) {
-    var self = this;
-    db.con(function (connect) {
-        connect.query('select count(0) from ' + self.type, function (err, result) {
-            if (err) {
-                console.log(err);
-                return callback(err);
-            }
-            callback(null, result)
-        })
-    })
-}
+
 
 admin.prototype.getManager = function (callback) {
     var self = this;
