@@ -118,4 +118,5 @@ router.post('/getAdmin', function (req, res, next) {
         }
     })
 })
+
 module.exports = router;

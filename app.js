@@ -11,6 +11,7 @@ var users = require('./routes/users');
 var admin = require('./routes/admin');
 var common = require('./routes/common');
 var shop = require('./routes/shop');
+var food = require('./routes/food');
 
 var app = express();
 
@@ -38,7 +39,7 @@ app.use('/users', users);
 app.use('/api/admin', admin);
 app.use('/api/common', common);
 app.use('/api/shop', shop);
-
+app.use('/api/food', food)
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   var err = new Error('Not Found');

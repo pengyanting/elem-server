@@ -44,4 +44,40 @@ router.post('/query', function (req, res, next) {
     })
 })
 
+//删除商铺
+router.post('/del/:id', function (req, res, next) {
+    const _shop = new shop({
+        id: req.body.id
+    })
+    _shop.del(function (err, result) {
+        if (err) {
+            console.log(err)
+            res.send({ err: err, 'message': 'err', code: 1 });
+            return;
+        }
+        res.send({ message: 'success', code: 0, result: [] })
+    })
+})
+
+//编辑商铺
+router.post('/edit/:id', function (req, res, next) {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    const newShop = new shop({
+        formData: req.body
+    })
+    newShop.edit(function (err, result) {
+        if (err) {
+            console.log(err);
+            res.send({ err: err, code: 1 })
+            return
+        }
+        console.log(result)
+        if (result.affectedRows == 1) {
+            res.send({ message: 'success', code: 0, result: result })
+        } else {
+            res.send({ err: '修改失败', code: 1, result: result })
+        }
+
+    })
+})
 module.exports = router
