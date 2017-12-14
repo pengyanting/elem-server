@@ -1,7 +1,7 @@
 var mysql = require('mysql');//调用mysql模块
 
 var pool = mysql.createPool({
-    host: 'rm-uf67944189w34o6pno.mysql.rds.aliyuncs.com:3306',  //表示本地的数据库  
+    host: 'rm-uf67944189w34o6pnqo.mysql.rds.aliyuncs.com',  //表示本地的数据库  
     user: 'root',       //账号  
     password: 'pyt931028!', //密码  
     database: 'elem'    //库名  
