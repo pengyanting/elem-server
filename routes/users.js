@@ -3,7 +3,7 @@ var router = express.Router();
 var db = require('../modules/db');
 var User = require('../modules/users');   // 调用刚才封装好的user类  
 router.get('/upload', function (req, res, next) {
-  res.send('aa')
+  res.send('aaccc')
 })
 
 
@@ -129,5 +129,22 @@ router.post('/updatePwd', function (req, res, next) {
     })
   })
 })
-
+router.get('/updateName', function (req, res, next) {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  var newUser = new User({
+    id: 1,
+    name: 'aa'
+  })
+  newUser.updateName(function (err, result) {
+    if (err) {
+      res.send({ err: err });
+      return;
+    }
+    res.send({
+      message: 'success',
+      code: 0,
+      result: result
+    })
+  })
+})
 module.exports = router;
